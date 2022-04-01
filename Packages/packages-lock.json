@@ -1,5 +1,40 @@
 {
   "dependencies": {
+    "com.esotericsoftware.spine.spine-csharp": {
+      "version": "https://github.com/EsotericSoftware/spine-runtimes.git?path=spine-csharp/src#4.0",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "4792522de03c49e66c7a31ff4361f16b2be93202"
+    },
+    "com.esotericsoftware.spine.spine-unity": {
+      "version": "https://github.com/EsotericSoftware/spine-runtimes.git?path=spine-unity/Assets/Spine#4.0",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.esotericsoftware.spine.spine-csharp": "4.0.0"
+      },
+      "hash": "4792522de03c49e66c7a31ff4361f16b2be93202"
+    },
+    "com.esotericsoftware.spine.spine-unity-examples": {
+      "version": "https://github.com/EsotericSoftware/spine-runtimes.git?path=spine-unity/Assets/Spine Examples#4.0",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.esotericsoftware.spine.spine-unity": "4.0.0"
+      },
+      "hash": "4792522de03c49e66c7a31ff4361f16b2be93202"
+    },
+    "com.esotericsoftware.spine.timeline": {
+      "version": "https://github.com/EsotericSoftware/spine-runtimes.git?path=spine-unity/Modules/com.esotericsoftware.spine.timeline#4.0",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.timeline": "1.2.10",
+        "com.esotericsoftware.spine.spine-unity": "4.0.0"
+      },
+      "hash": "4792522de03c49e66c7a31ff4361f16b2be93202"
+    },
     "com.unity.collab-proxy": {
       "version": "1.15.15",
       "depth": 0,
