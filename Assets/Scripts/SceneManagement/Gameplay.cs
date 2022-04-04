@@ -4,17 +4,17 @@ namespace UnityProject.SceneManagement
 {
     public class Gameplay : MonoBehaviour
     {
-        private bool isGameInProgress;
+        private bool _isGameInProgress;
 
         private void Start()
         {
-            isGameInProgress = false;
+            _isGameInProgress = false;
             PauseGame();
         }
 
         private void Update()
         {
-            if (isGameInProgress) return;
+            if (_isGameInProgress) return;
             
             if(Input.touchCount > 0)
             {
@@ -25,13 +25,13 @@ namespace UnityProject.SceneManagement
         private void PauseGame()
         {
             Time.timeScale = 0;
-            isGameInProgress = false;
+            _isGameInProgress = false;
         }
 
         private void ContinueGame()
         {
             Time.timeScale = 1;
-            isGameInProgress = true;
+            _isGameInProgress = true;
         }
     }
 }

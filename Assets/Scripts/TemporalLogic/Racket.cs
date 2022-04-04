@@ -3,41 +3,49 @@ using UnityEngine;
 namespace UnityProject.TemporalLogic
 {
     public class Racket : MonoBehaviour
-    {
-        [SerializeField] private float _speed;
-        [SerializeField] private float _maxRotationAngle;
-        private Vector3 defaultPosition;
-        private Vector3 pathLenght;
-        private Camera gameCamera;
+    {  
+        [Header("Rotates racket to one radian (-0.5, 0.5)")]
+        [SerializeField] [Range(0.01f, 1f)] private float _interpolationStep;
+        [SerializeField] [Range(1f, 30f)] private float _anglePerMeter;
+        private Vector3 _racketDefaultPosition;
+        private Vector3 _racketDefaultRotationEuler;
+        private Vector3 _touchDefaultPosition;
+        private Camera _gameCamera;
 
         private void Start()
         {
-            defaultPosition = transform.position;
+            _racketDefaultPosition = transform.position;
+            _racketDefaultRotationEuler = transform.rotation.eulerAngles;
+            _gameCamera = Camera.main;
             
-            gameCamera = Camera.main;
-            
-            if (gameCamera != null) 
-                pathLenght = gameCamera.ScreenToWorldPoint(new Vector3(gameCamera.pixelWidth, 0, 0));
+            if (_gameCamera != null) 
+                _touchDefaultPosition = _gameCamera.ScreenToWorldPoint(new Vector3(_gameCamera.pixelWidth, 0, 0));
         }
 
         private void Update()
         {
-            var pathFactor = transform.position.x / pathLenght.x;
+            HandleTouch();
+        }
+
+        private void HandleTouch()
+        {
+            var pathFactor = transform.position.x / _touchDefaultPosition.x;
             
             if (Input.touchCount > 0)
             {
                 var touch = Input.GetTouch(0);
-                var touchPosition = gameCamera.ScreenToWorldPoint(touch.position);
-                print(touch.position);
-                if (touch.phase == TouchPhase.Moved)
-                {
-                    MoveAndRotate(touchPosition.x, pathFactor, 1);
+                var distanceCameraToRacket = Vector3.Distance(transform.position, _gameCamera.transform.position);
+                var touchPosDistanceClipping = new Vector3(touch.position.x, touch.position.y, distanceCameraToRacket);
+                var touchToCameraNearClipping = _gameCamera.ScreenToWorldPoint(touchPosDistanceClipping);
+
+                if (touch.phase == TouchPhase.Moved) {
+                    MoveAndRotate(touchToCameraNearClipping.x, pathFactor, 1);
                 }
             }
 
             if (Input.touchCount == 0)
             {
-                MoveAndRotate(defaultPosition.x, pathFactor, _speed);
+                MoveAndRotate(_racketDefaultPosition.x, pathFactor, _interpolationStep);
             }
         }
 
@@ -45,10 +53,14 @@ namespace UnityProject.TemporalLogic
         {
             transform.position = Vector3.Lerp(
                 transform.position, 
-                new Vector3(newPositionX, defaultPosition.y, defaultPosition.z), 
+                new Vector3(newPositionX, _racketDefaultPosition.y, _racketDefaultPosition.z), 
                 lerpInterpolation);
             
-            //transform.rotation = Quaternion.Euler(0f, 0f, _maxRotationAngle * pathFactor);
+            transform.eulerAngles = new Vector3(
+                _racketDefaultRotationEuler.x,
+                _racketDefaultRotationEuler.y,
+                _racketDefaultRotationEuler.z + (_anglePerMeter * (newPositionX - _racketDefaultPosition.x)));
+                
         }
     }
 }
